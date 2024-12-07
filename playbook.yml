@@ -1,0 +1,28 @@
+- name: Create user and configure sudo permissions
+  hosts: ubuntu
+  become: true
+  tasks:
+    - name: Create user Ofentse
+      user:
+        name: Ofentse
+        shell: /bin/bash
+        create_home: yes
+        home: /home/Doe
+    - name: Allow Ofentse to run sudo without passwd
+      lineinfile:
+        dest: /etc/sudoers
+        line: 'Ofentse ALL=(ALL) NOPASSWD:ALL'
+        validate: 'visudo -cf %s'
+    - name: Update apt cache
+      apt: 
+        update_cache: yes
+    - name: Upgrade all packages  
+      apt:
+        upgrade: dist
+        update_cache: yes
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+        update_cache: yes
+        
